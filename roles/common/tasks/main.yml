@@ -1,0 +1,7 @@
+- name: Ensure base docker directory exists
+  file:
+    path: /srv/docker
+    state: directory
+    owner: root
+    group: docker
+    mode: "0755"

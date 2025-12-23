@@ -1,0 +1,17 @@
+entryPoints:
+  websecure:
+    address: ":443"
+
+providers:
+  docker:
+    exposedByDefault: false
+  file:
+    filename: /dynamic.yml
+
+certificatesResolvers:
+  dns:
+    acme:
+      email: you@{{ base_domain }}
+      storage: /acme.json
+      dnsChallenge:
+        provider: cloudflare

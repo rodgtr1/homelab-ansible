@@ -1,0 +1,15 @@
+- name: Ensure Docker is installed
+  package:
+    name: docker.io
+    state: present
+
+- name: Ensure Docker is running
+  service:
+    name: docker
+    state: started
+    enabled: true
+
+- name: Ensure proxy network exists
+  community.docker.docker_network:
+    name: "{{ docker_network }}"
+    state: present

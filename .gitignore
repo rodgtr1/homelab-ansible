@@ -47,10 +47,4 @@ acme.json
 # Ansible Galaxy downloads
 # ----------------------------------
 collections/
-roles/*/
-!roles/*/tasks/
-!roles/*/handlers/
-!roles/*/templates/
-!roles/*/files/
-!roles/*/meta/
 

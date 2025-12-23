@@ -1,0 +1,33 @@
+- name: Create Traefik directory
+  file:
+    path: "{{ traefik_dir }}"
+    state: directory
+    owner: root
+    group: docker
+    mode: "0755"
+
+- name: Deploy Traefik static config
+  template:
+    src: traefik.yml.j2
+    dest: "{{ traefik_dir }}/traefik.yml"
+
+- name: Deploy Traefik compose
+  template:
+    src: docker-compose.yml.j2
+    dest: "{{ traefik_dir }}/docker-compose.yml"
+
+- name: Deploy dynamic config
+  copy:
+    src: dynamic.yml
+    dest: "{{ traefik_dir }}/dynamic.yml"
+
+- name: Ensure acme.json exists
+  file:
+    path: "{{ traefik_dir }}/acme.json"
+    state: touch
+    mode: "0600"
+
+- name: Start Traefik
+  community.docker.docker_compose_v2:
+    project_src: "{{ traefik_dir }}"
+    state: present
