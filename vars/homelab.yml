@@ -1,0 +1,16 @@
+# Global
+base_domain: travismedia.cloud
+timezone: America/New_York
+
+# Traefik
+traefik_dir: /srv/docker/traefik
+docker_network: proxy
+traefik_image: traefik:v3.6
+traefik_host: traefik
+
+# Pi-hole (later)
+pihole_host: pihole
+pihole_ip: 192.168.1.86
+
+# Cloudflare
+cf_dns_api_token: "{{ lookup('env', 'CF_DNS_API_TOKEN') }}"

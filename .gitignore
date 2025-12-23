@@ -1,0 +1,56 @@
+# ----------------------------------
+# Ansible runtime / artifacts
+# ----------------------------------
+*.retry
+*.log
+.cache/
+__pycache__/
+*.pyc
+
+# ----------------------------------
+# Secrets & vars (never commit)
+# ----------------------------------
+vault.yml
+vault.yaml
+secrets.yml
+secrets.yaml
+*.vault
+.env
+.env.*
+
+# ----------------------------------
+# SSH keys / credentials
+# ----------------------------------
+*.pem
+*.key
+id_rsa*
+id_ed25519*
+
+# ----------------------------------
+# Generated / remote files
+# ----------------------------------
+acme.json
+*.crt
+*.key
+*.pem
+
+# ----------------------------------
+# OS / Editor junk
+# ----------------------------------
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# ----------------------------------
+# Ansible Galaxy downloads
+# ----------------------------------
+collections/
+roles/*/
+!roles/*/tasks/
+!roles/*/handlers/
+!roles/*/templates/
+!roles/*/files/
+!roles/*/meta/
+
