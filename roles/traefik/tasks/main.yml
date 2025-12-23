@@ -11,6 +11,20 @@
     src: traefik.yml.j2
     dest: "{{ traefik_dir }}/traefik.yml"
 
+- name: Install Traefik env.example
+  template:
+    src: env.example.j2
+    dest: "{{ traefik_dir }}/.env.example"
+    mode: "0644"
+
+- name: Install Traefik .env
+  template:
+    src: env.j2
+    dest: "{{ traefik_dir }}/.env"
+    owner: root
+    group: docker
+    mode: "0600"
+
 - name: Deploy Traefik compose
   template:
     src: docker-compose.yml.j2

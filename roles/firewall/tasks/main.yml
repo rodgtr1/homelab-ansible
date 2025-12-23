@@ -1,13 +1,30 @@
+- name: Ensure UFW is installed
+  apt:
+    name: ufw
+    state: present
+  become: true
+
+- name: Set default deny incoming
+  ufw:
+    direction: incoming
+    policy: deny
+
+- name: Set default allow outgoing
+  ufw:
+    direction: outgoing
+    policy: allow
+
 - name: Allow SSH
   ufw:
     rule: allow
-    port: 22
+    name: OpenSSH
 
 - name: Allow HTTPS
   ufw:
     rule: allow
     port: 443
+    proto: tcp
 
-- name: Enable firewall
+- name: Enable UFW
   ufw:
     state: enabled

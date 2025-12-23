@@ -1,9 +1,20 @@
-- hosts: all
+- name: Proxy host (Traefik, Docker, Firewall)
+  hosts: proxy
   become: true
   vars_files:
     - ../vars/homelab.yml
+    - ../vars/vault.yml
   roles:
     - common
     - docker
     - traefik
     - firewall
+
+- name: DNS host (Pi-hole)
+  hosts: dns
+  become: true
+  vars_files:
+    - ../vars/homelab.yml
+    - ../vars/vault.yml
+  roles:
+    - pihole

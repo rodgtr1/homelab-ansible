@@ -1,7 +1,15 @@
-- name: Ensure Docker is installed
-  package:
+- name: Check if Docker is already installed
+  command: docker --version
+  register: docker_version_check
+  ignore_errors: true
+  changed_when: false
+
+- name: Install Docker if not present
+  apt:
     name: docker.io
     state: present
+    update_cache: true
+  when: docker_version_check.rc != 0
 
 - name: Ensure Docker is running
   service:

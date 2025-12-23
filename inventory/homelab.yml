@@ -1,7 +1,13 @@
 all:
-  hosts:
-    pimaster:
-      ansible_host: 192.168.1.68
-      ansible_user: pi
-      ansible_become: true
+  children:
+    proxy:
+      hosts:
+        pimaster:
+          ansible_host: 192.168.1.68
+          ansible_user: pi
 
+    dns:
+      hosts:
+        pihole:
+          ansible_host: 192.168.1.86
+          ansible_user: pi

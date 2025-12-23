@@ -17,13 +17,6 @@ services:
       - ./dynamic.yml:/dynamic.yml:ro
       - ./acme.json:/acme.json
 
-    labels:
-      - traefik.enable=true
-      - traefik.http.routers.traefik.rule=Host(`{{ traefik_host }}.{{ base_domain }}`)
-      - traefik.http.routers.traefik.entrypoints=websecure
-      - traefik.http.routers.traefik.service=api@internal
-      - traefik.http.routers.traefik.tls.certresolver=dns
-
     networks:
       - {{ docker_network }}
 

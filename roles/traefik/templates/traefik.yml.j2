@@ -8,10 +8,13 @@ providers:
   file:
     filename: /dynamic.yml
 
+api:
+  dashboard: true
+
 certificatesResolvers:
   dns:
     acme:
-      email: you@{{ base_domain }}
+      email: info@{{ base_domain }}
       storage: /acme.json
       dnsChallenge:
         provider: cloudflare
