@@ -1,0 +1,29 @@
+tls:
+  options:
+    default:
+      minVersion: VersionTLS12
+
+http:
+  routers:
+    traefik-dashboard:
+      rule: Host(`traefik.travismedia.cloud`)
+      entryPoints:
+        - websecure
+      service: api@internal
+      tls:
+        certResolver: dns
+
+    pihole:
+      rule: Host(`pihole.travismedia.cloud`)
+      entryPoints:
+        - websecure
+      service: pihole
+      tls:
+        certResolver: dns
+
+  services:
+    pihole:
+      loadBalancer:
+        servers:
+          - url: "http://192.168.1.86:80"
+
