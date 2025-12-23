@@ -4,9 +4,8 @@ services:
     container_name: traefik
     restart: unless-stopped
 
-    environment:
-      - TZ={{ timezone }}
-      - CF_DNS_API_TOKEN={{ cf_dns_api_token }}
+    env_file:
+      - .env
 
     ports:
       - "443:443"

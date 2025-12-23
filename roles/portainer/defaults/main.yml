@@ -1,0 +1,5 @@
+portainer:
+  dir: /srv/docker/portainer
+  image: portainer/portainer-ce:latest
+  hostname: portainer
+  port: 9000

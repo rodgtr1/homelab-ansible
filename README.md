@@ -59,7 +59,7 @@ This token is stored securely using Ansible Vault and is never committed to git.
 Secrets are stored using Ansible Vault.
 
 Required secret:
-- CF_DNS_API_TOKEN
+- CLOUDFLARE_DNS_API_TOKEN
 
 Edit or create the vault file:
 

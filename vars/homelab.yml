@@ -12,5 +12,7 @@ traefik_host: traefik
 pihole_host: pihole
 pihole_ip: 192.168.1.86
 
-# Cloudflare
-cf_dns_api_token: "{{ lookup('env', 'CF_DNS_API_TOKEN') }}"
+# Portainer
+portainer_dir: /srv/docker/portainer
+portainer_host: portainer
+portainer_domain: "{{ portainer_host }}.{{ base_domain }}"
