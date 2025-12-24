@@ -21,9 +21,41 @@ http:
       tls:
         certResolver: dns
 
+    nextcloud:
+      rule: Host(`nextcloud.travismedia.cloud`)
+      entryPoints:
+        - websecure
+      service: nextcloud
+      tls:
+        certResolver: dns
+      middlewares:
+        - nextcloud-chain
+
   services:
     pihole:
       loadBalancer:
         servers:
           - url: "http://192.168.1.86:80"
+
+    nextcloud:
+      loadBalancer:
+        servers:
+          - url: "http://nextcloud-aio-apache:11000"
+
+  middlewares:
+    nextcloud-secure-headers:
+      headers:
+        hostsProxyHeaders:
+          - "X-Forwarded-Host"
+        referrerPolicy: "same-origin"
+
+    https-redirect:
+      redirectScheme:
+        scheme: https
+
+    nextcloud-chain:
+      chain:
+        middlewares:
+          - https-redirect
+          - nextcloud-secure-headers
 

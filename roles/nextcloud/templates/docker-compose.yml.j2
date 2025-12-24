@@ -1,0 +1,37 @@
+services:
+  nextcloud-aio-mastercontainer:
+    image: nextcloud/all-in-one:latest
+    container_name: nextcloud-aio-mastercontainer
+    init: true
+    restart: always
+
+    volumes:
+      - nextcloud_aio_mastercontainer:/mnt/docker-aio-config
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+
+    ports:
+      - "8080:8080"
+
+    environment:
+      - NEXTCLOUD_DATADIR={{ nextcloud_datadir }}
+      - APACHE_PORT=11000
+      - APACHE_IP_BINDING=0.0.0.0
+      - APACHE_ADDITIONAL_NETWORK={{ docker_network }}
+      - NEXTCLOUD_TRUSTED_DOMAINS={{ nextcloud_domain }}
+      - TRUSTED_PROXIES=172.18.0.0/16
+      - OVERWRITEPROTOCOL=https
+      - OVERWRITEHOST={{ nextcloud_domain }}
+
+    networks:
+      - nextcloud-aio
+      - {{ docker_network }}
+
+volumes:
+  nextcloud_aio_mastercontainer:
+    name: nextcloud_aio_mastercontainer
+
+networks:
+  nextcloud-aio:
+    internal: true
+  {{ docker_network }}:
+    external: true

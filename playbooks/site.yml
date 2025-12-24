@@ -7,9 +7,14 @@
   roles:
     - common
     - docker
-    - traefik
-    - portainer
-    - firewall
+    - role: traefik
+      when: deploy_traefik | default(true)
+    - role: portainer
+      when: deploy_portainer | default(true)
+    - role: nextcloud
+      when: deploy_nextcloud | default(true)
+    - role: firewall
+      when: deploy_firewall | default(true)
 
 - name: DNS host (Pi-hole)
   hosts: dns
@@ -18,4 +23,5 @@
     - ../vars/homelab.yml
     - ../vars/vault.yml
   roles:
-    - pihole
+    - role: pihole
+      when: deploy_pihole | default(true)

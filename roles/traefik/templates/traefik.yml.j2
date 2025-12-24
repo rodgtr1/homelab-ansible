@@ -1,6 +1,13 @@
 entryPoints:
   websecure:
     address: ":443"
+    transport:
+      respondingTimeouts:
+        readTimeout: 24h
+    http:
+      encodedCharacters:
+        allowEncodedSlash: true
+        allowEncodedQuestionMark: true
 
 providers:
   docker:

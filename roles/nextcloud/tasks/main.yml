@@ -1,0 +1,28 @@
+- name: Ensure NAS data directory exists
+  file:
+    path: "{{ nextcloud_datadir }}"
+    state: directory
+    owner: root
+    group: docker
+    mode: "0755"
+
+- name: Create NextCloud directory
+  file:
+    path: "{{ nextcloud_dir }}"
+    state: directory
+    owner: root
+    group: docker
+    mode: "0755"
+
+- name: Deploy NextCloud compose file
+  template:
+    src: docker-compose.yml.j2
+    dest: "{{ nextcloud_dir }}/docker-compose.yml"
+    owner: root
+    group: docker
+    mode: "0644"
+
+- name: Start NextCloud AIO
+  community.docker.docker_compose_v2:
+    project_src: "{{ nextcloud_dir }}"
+    state: present

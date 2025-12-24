@@ -1,0 +1,5 @@
+nextcloud:
+  dir: /srv/docker/nextcloud
+  image: nextcloud/all-in-one:latest
+  hostname: nextcloud
+  datadir: /mnt/nas/nextcloud-data

@@ -2,6 +2,13 @@
 base_domain: travismedia.cloud
 timezone: America/New_York
 
+# Service Deployment Toggles
+deploy_traefik: true
+deploy_portainer: true
+deploy_nextcloud: true
+deploy_pihole: true
+deploy_firewall: true
+
 # Traefik
 traefik_dir: /srv/docker/traefik
 docker_network: proxy
@@ -16,3 +23,9 @@ pihole_ip: 192.168.1.86
 portainer_dir: /srv/docker/portainer
 portainer_host: portainer
 portainer_domain: "{{ portainer_host }}.{{ base_domain }}"
+
+# NextCloud
+nextcloud_dir: /srv/docker/nextcloud
+nextcloud_host: nextcloud
+nextcloud_domain: "{{ nextcloud_host }}.{{ base_domain }}"
+nextcloud_datadir: /mnt/nas/nextcloud-data
