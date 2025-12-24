@@ -1,0 +1,52 @@
+- name: Create Homepage directory
+  file:
+    path: "{{ homepage_dir }}"
+    state: directory
+    owner: root
+    group: docker
+    mode: "0755"
+
+- name: Create Homepage config directory
+  file:
+    path: "{{ homepage_dir }}/config"
+    state: directory
+    owner: root
+    group: docker
+    mode: "0755"
+
+- name: Deploy Homepage compose file
+  template:
+    src: docker-compose.yml.j2
+    dest: "{{ homepage_dir }}/docker-compose.yml"
+    owner: root
+    group: docker
+    mode: "0644"
+
+- name: Deploy Homepage bookmarks config
+  template:
+    src: bookmarks.yaml.j2
+    dest: "{{ homepage_dir }}/config/bookmarks.yaml"
+    owner: root
+    group: docker
+    mode: "0644"
+
+- name: Deploy Homepage services config
+  template:
+    src: services.yaml.j2
+    dest: "{{ homepage_dir }}/config/services.yaml"
+    owner: root
+    group: docker
+    mode: "0644"
+
+- name: Deploy Homepage widgets config
+  template:
+    src: widgets.yaml.j2
+    dest: "{{ homepage_dir }}/config/widgets.yaml"
+    owner: root
+    group: docker
+    mode: "0644"
+
+- name: Start Homepage
+  community.docker.docker_compose_v2:
+    project_src: "{{ homepage_dir }}"
+    state: present

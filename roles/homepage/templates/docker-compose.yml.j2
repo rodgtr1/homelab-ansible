@@ -1,0 +1,26 @@
+services:
+  homepage:
+    image: {{ homepage.image }}
+    container_name: homepage
+    restart: unless-stopped
+
+    environment:
+      - HOMEPAGE_ALLOWED_HOSTS={{ homepage_domain }}
+
+    volumes:
+      - {{ homepage_dir }}/config:/app/config
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+
+    networks:
+      - proxy
+
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.homepage.rule=Host(`{{ homepage_domain }}`)
+      - traefik.http.routers.homepage.entrypoints=websecure
+      - traefik.http.routers.homepage.tls.certresolver=dns
+      - traefik.http.services.homepage.loadbalancer.server.port=3000
+
+networks:
+  proxy:
+    external: true

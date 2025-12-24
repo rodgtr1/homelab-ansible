@@ -6,6 +6,9 @@ Minimal Ansible setup for managing a homelab with:
 - Docker
 - Firewall (UFW)
 - Pi-hole (managed, NOT installed)
+- Portainer (Docker management UI)
+- Nextcloud (self-hosted cloud storage)
+- Homepage (dashboard)
 
 This repo assumes you already have servers running and want repeatable configuration — not installers.
 
@@ -14,8 +17,9 @@ This repo assumes you already have servers running and want repeatable configura
 ## Architecture
 
 Host: pimaster  
-Purpose: Docker + Traefik reverse proxy  
+Purpose: Docker host + Traefik reverse proxy + services  
 IP: 192.168.1.68  
+Services: Traefik, Portainer, Nextcloud (optional), Homepage  
 
 Host: pihole  
 Purpose: Pi-hole DNS (standalone)  
@@ -32,7 +36,7 @@ Ansible only manages configuration and service state.
 - Ansible installed locally
 - Docker already installed on pimaster
 - Pi-hole already installed on pihole
-- Cloudflare account + domain
+- Cloudflare account + domain (travismedia.cloud)
 
 ---
 
@@ -63,7 +67,9 @@ Required secret:
 
 Edit or create the vault file:
 
+```bash
 ansible-vault edit vars/vault.yml
+```
 
 ---
 
@@ -71,21 +77,38 @@ ansible-vault edit vars/vault.yml
 
 Dry run (recommended):
 
+```bash
 ansible-playbook playbooks/site.yml --check --diff
+```
 
 Apply changes:
 
+```bash
 ansible-playbook playbooks/site.yml
+```
+
+### Service Toggles
+
+Services can be enabled/disabled in `vars/homelab.yml`:
+
+- `deploy_traefik`: true
+- `deploy_portainer`: true
+- `deploy_nextcloud`: false (disabled by default)
+- `deploy_homepage`: true
+- `deploy_pihole`: true
+- `deploy_firewall`: true
 
 ---
 
 ## Access
 
-Traefik dashboard:
-https://traefik.<your-domain>
+All services are accessible via HTTPS with wildcard TLS certificates:
 
-Pi-hole (proxied through Traefik):
-https://pihole.<your-domain>
+- Traefik dashboard: https://traefik.travismedia.cloud
+- Pi-hole (proxied through Traefik): https://pihole.travismedia.cloud
+- Portainer: https://portainer.travismedia.cloud
+- Homepage (dashboard): https://homepage.travismedia.cloud
+- Nextcloud (when enabled): https://nextcloud.travismedia.cloud
 
 TLS certificates are issued and automatically renewed by Traefik using DNS-01.
 

@@ -1,0 +1,4 @@
+homepage:
+  dir: /srv/docker/homepage
+  image: ghcr.io/gethomepage/homepage:latest
+  hostname: homepage

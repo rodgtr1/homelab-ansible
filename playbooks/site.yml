@@ -13,6 +13,8 @@
       when: deploy_portainer | default(true)
     - role: nextcloud
       when: deploy_nextcloud | default(true)
+    - role: homepage
+      when: deploy_homepage | default(true)
     - role: firewall
       when: deploy_firewall | default(true)
 
