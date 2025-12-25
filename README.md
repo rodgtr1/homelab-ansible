@@ -20,10 +20,12 @@ Host: pimaster
 Purpose: Docker host + Traefik reverse proxy + services  
 IP: 192.168.1.68  
 Services: Traefik, Portainer, Nextcloud (optional), Homepage  
+Firewall: UFW (ports 22, 80, 443)
 
 Host: pihole  
 Purpose: Pi-hole DNS (standalone)  
 IP: 192.168.1.86  
+Firewall: UFW (ports 22, 53, 80)
 
 Pi-hole runs on a separate server and is installed manually.  
 Ansible only manages configuration and service state.
@@ -34,41 +36,58 @@ Ansible only manages configuration and service state.
 
 - SSH key access to all hosts
 - Ansible installed locally
+- Ansible collections (install with: `ansible-galaxy collection install -r requirements.yml`)
 - Docker already installed on pimaster
 - Pi-hole already installed on pihole
 - Cloudflare account + domain (travismedia.cloud)
 
 ---
 
-## Cloudflare DNS-01 (Required)
+## Setup
 
-Traefik uses a DNS-01 challenge with Cloudflare to issue wildcard TLS certificates.
+1. **Install Ansible collections:**
+   ```bash
+   ansible-galaxy collection install -r requirements.yml
+   ```
 
-You must create a Cloudflare API token with **DNS edit permissions**.
+2. **Configure your domain and hosts:**
+   - Edit `vars/homelab.yml` with your domain and IP addresses
+   - Edit `inventory/homelab.yml` with your host details
 
-Steps:
-1. Log into Cloudflare
-2. Go to My Profile → API Tokens
-3. Create Token
-4. Use the template: "Edit zone DNS"
-5. Scope it to the specific zone (your domain)
-6. Copy the token value
-
-This token is stored securely using Ansible Vault and is never committed to git.
+3. **Set up secrets (see Secrets section below)**
 
 ---
 
-## Secrets (Ansible Vault)
+## Secrets Setup
 
-Secrets are stored using Ansible Vault.
+Secrets are stored in `vars/vault.yml` using Ansible Vault.
 
-Required secret:
-- CLOUDFLARE_DNS_API_TOKEN
+### 1. Get Cloudflare API Token
 
-Edit or create the vault file:
+Traefik needs a Cloudflare API token for DNS-01 challenge:
+
+1. Log into Cloudflare → My Profile → API Tokens
+2. Create Token using "Edit zone DNS" template
+3. Scope to your domain
+4. Copy the token
+
+### 2. Generate Traefik Password
 
 ```bash
-ansible-vault edit vars/vault.yml
+docker run --rm httpd:alpine htpasswd -nbB admin YourPassword
+```
+
+### 3. Create Vault File
+
+```bash
+ansible-vault create vars/vault.yml --ask-vault-pass
+```
+
+See `vars/vault.yml.example` for the required format. Add both secrets:
+```yaml
+---
+cloudflare_dns_api_token: "your_token_here"
+traefik_dashboard_auth: "admin:$2y$05$..."  # From step 2
 ```
 
 ---
@@ -78,14 +97,16 @@ ansible-vault edit vars/vault.yml
 Dry run (recommended):
 
 ```bash
-ansible-playbook playbooks/site.yml --check --diff
+ansible-playbook playbooks/site.yml --check --diff --ask-vault-pass
 ```
 
 Apply changes:
 
 ```bash
-ansible-playbook playbooks/site.yml
+ansible-playbook playbooks/site.yml --ask-vault-pass
 ```
+
+You will be prompted for your vault password before execution.
 
 ### Service Toggles
 
@@ -97,6 +118,17 @@ Services can be enabled/disabled in `vars/homelab.yml`:
 - `deploy_homepage`: true
 - `deploy_pihole`: true
 - `deploy_firewall`: true
+
+### Docker Image Versions
+
+Image versions are pinned in `vars/homelab.yml` for reproducibility:
+
+- Traefik: `traefik:v3.6`
+- Portainer: `portainer/portainer-ce:2.21.4`
+- Homepage: `ghcr.io/gethomepage/homepage:v1.8.0`
+- Nextcloud: `nextcloud/all-in-one:latest` (AIO recommends latest)
+
+Update these versions in the vars file as needed.
 
 ---
 
@@ -111,6 +143,8 @@ All services are accessible via HTTPS with wildcard TLS certificates:
 - Nextcloud (when enabled): https://nextcloud.travismedia.cloud
 
 TLS certificates are issued and automatically renewed by Traefik using DNS-01.
+
+Traefik dashboard requires authentication (configured in vault).
 
 ---
 

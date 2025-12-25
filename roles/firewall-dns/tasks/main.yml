@@ -19,16 +19,22 @@
     rule: allow
     name: OpenSSH
 
-- name: Allow HTTP
+- name: Allow DNS (TCP)
+  ufw:
+    rule: allow
+    port: 53
+    proto: tcp
+
+- name: Allow DNS (UDP)
+  ufw:
+    rule: allow
+    port: 53
+    proto: udp
+
+- name: Allow HTTP (for Pi-hole web UI)
   ufw:
     rule: allow
     port: 80
-    proto: tcp
-
-- name: Allow HTTPS
-  ufw:
-    rule: allow
-    port: 443
     proto: tcp
 
 - name: Enable UFW

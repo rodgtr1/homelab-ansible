@@ -1,5 +1,5 @@
 # Global
-base_domain: travismedia.cloud
+base_domain: yourdomain.com
 timezone: America/New_York
 
 # Service Deployment Toggles
@@ -24,14 +24,17 @@ pihole_ip: 192.168.1.86
 portainer_dir: /srv/docker/portainer
 portainer_host: portainer
 portainer_domain: "{{ portainer_host }}.{{ base_domain }}"
+portainer_image: portainer/portainer-ce:2.21.4
 
 # NextCloud
 nextcloud_dir: /srv/docker/nextcloud
 nextcloud_host: nextcloud
 nextcloud_domain: "{{ nextcloud_host }}.{{ base_domain }}"
 nextcloud_datadir: /mnt/nas/nextcloud-data
+nextcloud_image: nextcloud/all-in-one:latest # AIO recommends using latest
 
 # Homepage
 homepage_dir: /srv/docker/homepage
 homepage_host: homepage
 homepage_domain: "{{ homepage_host }}.{{ base_domain }}"
+homepage_image: ghcr.io/gethomepage/homepage:v1.8.0

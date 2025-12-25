@@ -1,5 +1,7 @@
-[webserver];
-port = "80";
-domain = "pihole.travismedia.cloud"[webserver.tls];
-cert = "";
-validity = 0;
+[webserver]
+port = "80"
+domain = "{{ pihole_host }}.{{ base_domain }}"
+
+[webserver.tls]
+cert = ""
+validity = 0

@@ -1,6 +1,6 @@
 services:
   nextcloud-aio-mastercontainer:
-    image: nextcloud/all-in-one:latest
+    image: {{ nextcloud_image }}
     container_name: nextcloud-aio-mastercontainer
     init: true
     restart: always

@@ -27,3 +27,5 @@
   roles:
     - role: pihole
       when: deploy_pihole | default(true)
+    - role: firewall-dns
+      when: deploy_firewall | default(true)

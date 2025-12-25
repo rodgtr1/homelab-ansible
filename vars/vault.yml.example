@@ -1,0 +1,13 @@
+---
+# Example vault file - copy to vault.yml and encrypt with ansible-vault
+# Create your vault: ansible-vault create vars/vault.yml --ask-vault-pass
+
+# Cloudflare API token for DNS-01 challenge
+# Get from: Cloudflare Dashboard → My Profile → API Tokens
+# Template: "Edit zone DNS"
+cloudflare_dns_api_token: "your_cloudflare_api_token_here"
+
+# Traefik dashboard authentication (bcrypt hash)
+# Generate with: docker run --rm httpd:alpine htpasswd -nbB admin YourPassword
+# Use the full output including "admin:" prefix
+traefik_dashboard_auth: "admin:$2y$05$your_bcrypt_hash_here"

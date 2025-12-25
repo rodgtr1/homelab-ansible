@@ -31,8 +31,8 @@
     dest: "{{ traefik_dir }}/docker-compose.yml"
 
 - name: Deploy dynamic config
-  copy:
-    src: dynamic.yml
+  template:
+    src: dynamic.yml.j2
     dest: "{{ traefik_dir }}/dynamic.yml"
 
 - name: Ensure acme.json exists

@@ -1,15 +1,51 @@
 services:
-  portainer:
-    image: portainer/portainer-ce:latest
-    container_name: portainer
+  docker-proxy:
+    image: tecnativa/docker-socket-proxy
+    container_name: docker-proxy
     restart: unless-stopped
+    privileged: true
 
     volumes:
-      - /var/run/docker.sock:/var/run/docker.sock
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+
+    environment:
+      - CONTAINERS=1
+      - SERVICES=1
+      - TASKS=1
+      - NETWORKS=1
+      - VOLUMES=1
+      - IMAGES=1
+      - INFO=1
+      - DISTRIBUTION=1
+      - POST=1
+      - BUILD=1
+      - COMMIT=1
+      - CONFIGS=1
+      - EXEC=1
+      - PLUGINS=1
+      - SECRETS=1
+      - SESSION=1
+      - SWARM=1
+
+    networks:
+      - portainer-backend
+
+  portainer:
+    image: {{ portainer_image }}
+    container_name: portainer
+    restart: unless-stopped
+    depends_on:
+      - docker-proxy
+
+    volumes:
       - {{ portainer_dir }}:/data
+
+    environment:
+      - DOCKER_HOST=tcp://docker-proxy:2375
 
     networks:
       - proxy
+      - portainer-backend
 
     labels:
       - traefik.enable=true
@@ -17,7 +53,10 @@ services:
       - traefik.http.routers.portainer.entrypoints=websecure
       - traefik.http.routers.portainer.tls.certresolver=dns
       - traefik.http.services.portainer.loadbalancer.server.port=9000
+      - traefik.docker.network=proxy
 
 networks:
   proxy:
     external: true
+  portainer-backend:
+    internal: true

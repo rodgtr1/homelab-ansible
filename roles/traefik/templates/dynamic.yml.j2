@@ -6,15 +6,17 @@ tls:
 http:
   routers:
     traefik-dashboard:
-      rule: Host(`traefik.travismedia.cloud`)
+      rule: Host(`{{ traefik_host }}.{{ base_domain }}`)
       entryPoints:
         - websecure
       service: api@internal
+      middlewares:
+        - traefik-auth
       tls:
         certResolver: dns
 
     pihole:
-      rule: Host(`pihole.travismedia.cloud`)
+      rule: Host(`{{ pihole_host }}.{{ base_domain }}`)
       entryPoints:
         - websecure
       service: pihole
@@ -22,7 +24,7 @@ http:
         certResolver: dns
 
     nextcloud:
-      rule: Host(`nextcloud.travismedia.cloud`)
+      rule: Host(`{{ nextcloud_host }}.{{ base_domain }}`)
       entryPoints:
         - websecure
       service: nextcloud
@@ -35,7 +37,7 @@ http:
     pihole:
       loadBalancer:
         servers:
-          - url: "http://192.168.1.86:80"
+          - url: "http://{{ pihole_ip }}:80"
 
     nextcloud:
       loadBalancer:
@@ -43,6 +45,11 @@ http:
           - url: "http://nextcloud-aio-apache:11000"
 
   middlewares:
+    traefik-auth:
+      basicAuth:
+        users:
+          - "{{ traefik_dashboard_auth }}"
+
     nextcloud-secure-headers:
       headers:
         hostsProxyHeaders:
@@ -58,4 +65,3 @@ http:
         middlewares:
           - https-redirect
           - nextcloud-secure-headers
-
