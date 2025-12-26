@@ -90,6 +90,20 @@ cloudflare_dns_api_token: "your_token_here"
 traefik_dashboard_auth: "admin:$2y$05$..."  # From step 2
 ```
 
+### 4. Edit or View Existing Vault
+
+To edit the vault file after creation:
+
+```bash
+ansible-vault edit vars/vault.yml --ask-vault-pass
+```
+
+To view the vault contents without editing:
+
+```bash
+ansible-vault view vars/vault.yml --ask-vault-pass
+```
+
 ---
 
 ## Deploy
