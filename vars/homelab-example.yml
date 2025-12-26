@@ -5,7 +5,7 @@ timezone: America/New_York
 # Service Deployment Toggles
 deploy_traefik: true
 deploy_portainer: true
-deploy_nextcloud: false
+deploy_nextcloud: true
 deploy_pihole: true
 deploy_firewall: true
 deploy_homepage: true
@@ -16,9 +16,10 @@ docker_network: proxy
 traefik_image: traefik:v3.6
 traefik_host: traefik
 
-# Pi-hole (later)
+# Pi-hole
 pihole_host: pihole
-pihole_ip: 192.168.1.86
+pihole_domain: "{{ pihole_host }}.{{ base_domain }}"
+pihole_ip: pihole.ip.address
 
 # Portainer
 portainer_dir: /srv/docker/portainer

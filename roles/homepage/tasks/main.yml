@@ -46,6 +46,14 @@
     group: docker
     mode: "0644"
 
+- name: Deploy Homepage settings config
+  template:
+    src: settings.yaml.j2
+    dest: "{{ homepage_dir }}/config/settings.yaml"
+    owner: root
+    group: docker
+    mode: "0644"
+
 - name: Start Homepage
   community.docker.docker_compose_v2:
     project_src: "{{ homepage_dir }}"

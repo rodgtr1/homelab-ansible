@@ -1,16 +1,61 @@
 ---
-- Homelab Services:
+- Services:
+
+    - PiHole:
+        icon: pi-hole.png
+        href: https://{{ pihole_host }}.{{ base_domain }}/admin
+        description: Network-wide ad blocking
+        widget:
+            type: pihole
+            url: https://{{ pihole_host }}.{{ base_domain }}
+            version: 6
+            key: {{ pihole_app_password }}
+
     - Nextcloud:
         icon: nextcloud.png
         href: https://{{ nextcloud_domain }}
         description: Cloud storage and collaboration platform
+        widget:
+            type: nextcloud
+            url: https://{{ nextcloud_domain }}
+            username: {{ nextcloud_app_username }}
+            password: {{ nextcloud_app_password }}
 
     - Portainer:
         icon: portainer.png
         href: https://{{ portainer_domain }}
         description: Docker container management
+        widget:
+            type: portainer
+            url: https://{{ portainer_domain }}
+            env: 4 # set to the workspace number in your portainer URL
+            key: {{ portainer_access_token }}
 
     - Traefik:
         icon: traefik.png
         href: https://{{ traefik_host }}.{{ base_domain }}
         description: Reverse proxy and load balancer
+        widget:
+            type: traefik
+            url: https://{{ traefik_host }}.{{ base_domain }}
+            username: {{ traefik_username }}
+            password: {{ traefik_password }}
+
+
+    - TrueNAS:
+        icon: truenas.png
+        url: http://192.168.1.46
+        widget:
+            type: truenas
+            url: http://192.168.1.46
+            key: {{ truenas_api_key }}
+            enablePools: true # optional, defaults to false
+
+- Info:
+
+    - Calendar:
+        widget:
+            type: calendar
+            firstDayInWeek: sunday
+            view: monthly
+            timezone: America/New_York

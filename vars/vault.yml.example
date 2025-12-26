@@ -11,3 +11,24 @@ cloudflare_dns_api_token: "your_cloudflare_api_token_here"
 # Generate with: docker run --rm httpd:alpine htpasswd -nbB admin YourPassword
 # Use the full output including "admin:" prefix
 traefik_dashboard_auth: "admin:$2y$05$your_bcrypt_hash_here"
+
+# Pi-hole app password for API access
+# Get from: Pi-hole Settings → Web Interface / API → Toggle Expert view → Configure App Password
+pihole_app_password: ""
+
+# Nextcloud app credentials for API access
+# Get from: Nextcloud → Administration Settings → Security → Create new app password
+nextcloud_app_username: ""
+nextcloud_app_password: ""
+
+# Portainer access token for API access
+# Get from: Portainer → My Account (top right menu) → Create access token
+portainer_access_token: ""
+
+# Traefik
+traefik_username: "admin"
+traefik_password: "your_traefik_password_here"
+
+# TrueNAS
+# Click on your profile and choose My API Keys
+truenas_api_key: "your_truenas_api_key_here"

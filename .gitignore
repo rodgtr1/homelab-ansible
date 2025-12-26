@@ -8,6 +8,11 @@ __pycache__/
 *.pyc
 
 # ----------------------------------
+# Environment-specific configs
+# ----------------------------------
+vars/homelab.yml
+
+# ----------------------------------
 # Secrets & vars (never commit)
 # ----------------------------------
 vault.yml
@@ -47,4 +52,3 @@ acme.json
 # Ansible Galaxy downloads
 # ----------------------------------
 collections/
-

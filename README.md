@@ -146,6 +146,22 @@ TLS certificates are issued and automatically renewed by Traefik using DNS-01.
 
 Traefik dashboard requires authentication (configured in vault).
 
+### Portainer Initial Setup
+
+After deploying Portainer for the first time:
+
+1. Access https://portainer.travismedia.cloud and create your admin account
+2. When prompted about connecting to Docker, **dismiss/skip the initial connection error**
+3. Manually add the Docker environment:
+   - Go to **Environments** → **Add environment**
+   - Select **Docker Standalone**
+   - Choose **API** as the connection method
+   - Enter the Environment URL: `docker-proxy:2375`
+   - Leave TLS **disabled** (internal network connection)
+   - Click **Connect**
+
+Portainer normally uses `/var/run/docker.sock` directly, but this setup uses docker-socket-proxy for secure, restricted access to the Docker API.
+
 ---
 
 ## Notes

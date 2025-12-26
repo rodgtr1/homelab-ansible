@@ -1,14 +1,19 @@
 ---
 - resources:
-    label: System
     cpu: true
     memory: true
     disk: /
-    uptime: true
 
-- openmeteo:
-    label: Weather
-    latitude: 36.66
-    longitude: -117.51
-    units: imperial
-    cache: 5
+
+- search:
+    provider: google
+    focus: true
+    showSearchSuggestions: true
+    target: _blank
+
+- datetime:
+    text_size: sm
+    format:
+      timeStyle: short
+      hour12: true
+      timeZone: 'America/New_York'
