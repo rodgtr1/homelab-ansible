@@ -9,6 +9,7 @@ deploy_nextcloud: true
 deploy_pihole: true
 deploy_firewall: true
 deploy_homepage: true
+deploy_vaultwarden: true
 
 # Traefik
 traefik_dir: /srv/docker/traefik
@@ -39,3 +40,10 @@ homepage_dir: /srv/docker/homepage
 homepage_host: homepage
 homepage_domain: "{{ homepage_host }}.{{ base_domain }}"
 homepage_image: ghcr.io/gethomepage/homepage:v1.8.0
+
+# Vaultwarden
+vaultwarden_dir: /srv/docker/vaultwarden
+vaultwarden_host: vault
+vaultwarden_domain: "{{ vaultwarden_host }}.{{ base_domain }}"
+vaultwarden_image: vaultwarden/server:1.34.3
+vaultwarden_signups_allowed: true

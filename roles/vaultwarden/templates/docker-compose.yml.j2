@@ -1,0 +1,28 @@
+services:
+  vaultwarden:
+    image: {{ vaultwarden_image }}
+    container_name: vaultwarden
+    restart: unless-stopped
+
+    environment:
+      - DOMAIN=https://{{ vaultwarden_domain }}
+      - SIGNUPS_ALLOWED={{ vaultwarden_signups_allowed }}
+      - ADMIN_TOKEN={{ vaultwarden_admin_token }}
+
+    volumes:
+      - {{ vaultwarden_dir }}/vw-data:/data
+
+    networks:
+      - proxy
+
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.vaultwarden.rule=Host(`{{ vaultwarden_domain }}`)
+      - traefik.http.routers.vaultwarden.entrypoints=websecure
+      - traefik.http.routers.vaultwarden.tls.certresolver=dns
+      - traefik.http.services.vaultwarden.loadbalancer.server.port=80
+      - traefik.docker.network=proxy
+
+networks:
+  proxy:
+    external: true

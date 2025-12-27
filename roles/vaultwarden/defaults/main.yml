@@ -1,0 +1,5 @@
+vaultwarden:
+  dir: /srv/docker/vaultwarden
+  image: vaultwarden/server:latest
+  hostname: vaultwarden
+  signups_allowed: true

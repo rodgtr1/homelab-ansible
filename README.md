@@ -9,6 +9,7 @@ Minimal Ansible setup for managing a homelab with:
 - Portainer (Docker management UI)
 - Nextcloud (self-hosted cloud storage)
 - Homepage (dashboard)
+- Vaultwarden (password manager)
 
 This repo assumes you already have servers running and want repeatable configuration — not installers.
 
@@ -19,7 +20,7 @@ This repo assumes you already have servers running and want repeatable configura
 Host: pimaster  
 Purpose: Docker host + Traefik reverse proxy + services  
 IP: 192.168.1.68  
-Services: Traefik, Portainer, Nextcloud (optional), Homepage  
+Services: Traefik, Portainer, Nextcloud (optional), Homepage, Vaultwarden  
 Firewall: UFW (ports 22, 80, 443)
 
 Host: pihole  
@@ -130,6 +131,7 @@ Services can be enabled/disabled in `vars/homelab.yml`:
 - `deploy_portainer`: true
 - `deploy_nextcloud`: false (disabled by default)
 - `deploy_homepage`: true
+- `deploy_vaultwarden`: true
 - `deploy_pihole`: true
 - `deploy_firewall`: true
 
@@ -141,6 +143,7 @@ Image versions are pinned in `vars/homelab.yml` for reproducibility:
 - Portainer: `portainer/portainer-ce:2.21.4`
 - Homepage: `ghcr.io/gethomepage/homepage:v1.8.0`
 - Nextcloud: `nextcloud/all-in-one:latest` (AIO recommends latest)
+- Vaultwarden: `vaultwarden/server:1.34.3`
 
 Update these versions in the vars file as needed.
 
@@ -155,6 +158,7 @@ All services are accessible via HTTPS with wildcard TLS certificates:
 - Portainer: https://portainer.travismedia.cloud
 - Homepage (dashboard): https://homepage.travismedia.cloud
 - Nextcloud (when enabled): https://nextcloud.travismedia.cloud
+- Vaultwarden: https://vault.travismedia.cloud
 
 TLS certificates are issued and automatically renewed by Traefik using DNS-01.
 
@@ -175,6 +179,38 @@ After deploying Portainer for the first time:
    - Click **Connect**
 
 Portainer normally uses `/var/run/docker.sock` directly, but this setup uses docker-socket-proxy for secure, restricted access to the Docker API.
+
+### Vaultwarden Initial Setup
+
+**Before deploying**, add an admin token to your vault file:
+
+```bash
+# Generate admin token
+openssl rand -base64 48
+
+# Edit vault and add the token
+ansible-vault edit vars/vault.yml --ask-vault-pass
+```
+
+After deploying Vaultwarden for the first time:
+
+1. Access https://vault.travismedia.cloud
+2. **Create your first account** while `SIGNUPS_ALLOWED=true` (default)
+   - Choose your own strong master password (you'll need this to log in)
+   - **If you lose this password, all your data is lost forever**
+3. After creating your account, **disable signups** by editing `vars/homelab.yml`:
+   - Set `vaultwarden_signups_allowed: false`
+   - Redeploy with: `ansible-playbook playbooks/site.yml --ask-vault-pass`
+4. Access the admin panel at https://vault.travismedia.cloud/admin
+   - Use the admin token from your vault file (not your master password)
+   - Review and adjust settings as needed
+
+**Security Notes:**
+- **Master password**: You choose this when creating your account. Never lose it.
+- **Admin token**: Randomly generated, stored in vault.yml, used for `/admin` panel
+- Always disable signups after creating your accounts
+- Vaultwarden requires HTTPS (handled by Traefik)
+- All data is encrypted and stored in `/srv/docker/vaultwarden/vw-data/`
 
 ---
 
