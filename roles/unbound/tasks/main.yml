@@ -1,0 +1,15 @@
+- name: Create Unbound config directory
+  file:
+    path: "{{ pihole_dir }}/unbound"
+    state: directory
+    owner: root
+    group: docker
+    mode: "0755"
+
+- name: Deploy Unbound config
+  template:
+    src: unbound.conf.j2
+    dest: "{{ pihole_dir }}/unbound/unbound.conf"
+    owner: root
+    group: docker
+    mode: "0644"

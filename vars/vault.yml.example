@@ -12,9 +12,10 @@ cloudflare_dns_api_token: "your_cloudflare_api_token_here"
 # Use the full output including "admin:" prefix
 traefik_dashboard_auth: "admin:$2y$05$your_bcrypt_hash_here"
 
-# Pi-hole app password for API access
-# Get from: Pi-hole Settings → Web Interface / API → Toggle Expert view → Configure App Password
-pihole_app_password: ""
+# Pi-hole web password for Docker container
+# This is the password you'll use to log into the Pi-hole web interface
+# Choose a strong password - this will be set when the container is created
+pihole_webpassword: "your_pihole_web_password_here"
 
 # Nextcloud app credentials for API access
 # Get from: Nextcloud → Administration Settings → Security → Create new app password

@@ -9,5 +9,5 @@ all:
     dns:
       hosts:
         pihole:
-          ansible_host: 192.168.1.86
+          ansible_host: 192.168.1.92
           ansible_user: pi

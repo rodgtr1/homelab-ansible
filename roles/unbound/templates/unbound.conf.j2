@@ -1,0 +1,46 @@
+server:
+    # Interface to listen on
+    interface: 127.0.0.1
+    port: 5335
+
+    # Access control
+    access-control: 127.0.0.0/8 allow
+    access-control: 0.0.0.0/0 refuse
+
+    # Performance tuning
+    num-threads: 1
+    msg-cache-slabs: 2
+    rrset-cache-slabs: 2
+    infra-cache-slabs: 2
+    key-cache-slabs: 2
+    msg-cache-size: 4m
+    rrset-cache-size: 8m
+    cache-min-ttl: 3600
+    cache-max-ttl: 86400
+
+    # Privacy and security
+    hide-identity: yes
+    hide-version: yes
+    harden-glue: yes
+    harden-dnssec-stripped: yes
+    use-caps-for-id: yes
+    edns-buffer-size: 1232
+    prefetch: yes
+    do-not-query-localhost: no
+    
+    # Reduce DNSSEC work
+    harden-algo-downgrade: no
+    qname-minimisation: yes
+
+    # Logging (minimal)
+    verbosity: 1
+    log-queries: no
+    logfile: ""
+
+    # Root hints (built-in)
+    root-hints: /usr/share/dns-root-hints/named.root
+
+    # Trust anchor for DNSSEC
+    auto-trust-anchor-file: /var/lib/unbound/root.key
+
+# Forward zones (none - we're recursive)

@@ -1,4 +1,9 @@
-- name: Restart Pi-hole
-  service:
-    name: pihole-FTL
+- name: restart pihole
+  community.docker.docker_compose_v2:
+    project_src: "{{ pihole_dir }}"
     state: restarted
+
+- name: reload pihole dns
+  community.docker.docker_container_exec:
+    container: pihole
+    command: pihole reloaddns

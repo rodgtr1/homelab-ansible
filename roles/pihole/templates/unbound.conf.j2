@@ -1,0 +1,41 @@
+server:
+    # Port to listen on (non-standard to avoid conflict with Pi-hole)
+    port: 5335
+    
+    # Listen on all interfaces (accessible within shared network namespace)
+    interface: 0.0.0.0
+    
+    # Use IPv4 only
+    do-ip4: yes
+    do-ip6: no
+    do-udp: yes
+    do-tcp: yes
+    
+    # Trust glue only if it is within the servers authority
+    harden-glue: yes
+    
+    # Require DNSSEC data for trust-anchored zones
+    harden-dnssec-stripped: yes
+    
+    # Don't use Capitalization randomization
+    use-caps-for-id: no
+    
+    # Reduce EDNS reassembly buffer size
+    edns-buffer-size: 1232
+    
+    # Perform prefetching of close to expired message cache entries
+    prefetch: yes
+    
+    # Number of threads to create
+    num-threads: 1
+    
+    # Power of 2 close to num-threads
+    so-rcvbuf: 1m
+    
+    # Ensure privacy of local IP ranges
+    private-address: 192.168.0.0/16
+    private-address: 169.254.0.0/16
+    private-address: 172.16.0.0/12
+    private-address: 10.0.0.0/8
+    private-address: fd00::/8
+    private-address: fe80::/10

@@ -27,6 +27,9 @@
     - ../vars/homelab.yml
     - ../vars/vault.yml
   roles:
+    - docker
+    - role: unbound
+      when: deploy_pihole | default(true)
     - role: pihole
       when: deploy_pihole | default(true)
     - role: firewall-dns

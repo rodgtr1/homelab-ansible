@@ -1,24 +1,67 @@
-- name: Check if Pi-hole is installed
-  stat:
-    path: /usr/local/bin/pihole
-  register: pihole_binary
+- name: Disable systemd-resolved to free port 53
+  systemd:
+    name: systemd-resolved
+    enabled: false
+    state: stopped
 
-- name: Fail if Pi-hole is not installed
-  fail:
-    msg: "Pi-hole is not installed. Install it manually first."
-  when: not pihole_binary.stat.exists
+- name: Create Pi-hole directory
+  file:
+    path: "{{ pihole_dir }}"
+    state: directory
+    owner: root
+    group: docker
+    mode: "0755"
 
-- name: Deploy Pi-hole config
+- name: Create unbound directory
+  file:
+    path: "{{ pihole_dir }}/unbound"
+    state: directory
+    owner: root
+    group: docker
+    mode: "0755"
+
+- name: Deploy unbound config
   template:
-    src: pihole.toml.j2
-    dest: /etc/pihole/pihole.toml
-    owner: pihole
-    group: pihole
+    src: unbound.conf.j2
+    dest: "{{ pihole_dir }}/unbound/unbound.conf"
+    owner: root
+    group: docker
     mode: "0644"
-  notify: Restart Pi-hole
 
-- name: Ensure Pi-hole service is running
-  service:
-    name: pihole-FTL
-    state: started
-    enabled: true
+- name: Create Pi-hole etc-pihole directory
+  file:
+    path: "{{ pihole_dir }}/etc-pihole"
+    state: directory
+    owner: root
+    group: docker
+    mode: "0755"
+
+- name: Create Pi-hole hosts directory
+  file:
+    path: "{{ pihole_dir }}/etc-pihole/hosts"
+    state: directory
+    owner: root
+    group: docker
+    mode: "0755"
+
+- name: Deploy custom DNS records
+  template:
+    src: custom.list.j2
+    dest: "{{ pihole_dir }}/etc-pihole/hosts/homelab.hosts"
+    owner: root
+    group: docker
+    mode: "0644"
+  notify: reload pihole dns
+
+- name: Deploy Pi-hole compose file
+  template:
+    src: docker-compose.yml.j2
+    dest: "{{ pihole_dir }}/docker-compose.yml"
+    owner: root
+    group: docker
+    mode: "0644"
+
+- name: Start Pi-hole
+  community.docker.docker_compose_v2:
+    project_src: "{{ pihole_dir }}"
+    state: present

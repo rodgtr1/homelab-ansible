@@ -1,0 +1,16 @@
+# Homelab DNS records for Pi-hole
+# This file is read by dnsmasq from the hostsdir directive
+
+# Proxy host services (pimaster @ 192.168.1.68)
+192.168.1.68 {{ traefik_host }}.{{ base_domain }}
+192.168.1.68 {{ portainer_host }}.{{ base_domain }}
+192.168.1.68 {{ homepage_host }}.{{ base_domain }}
+{% if deploy_vaultwarden %}
+192.168.1.68 {{ vaultwarden_host }}.{{ base_domain }}
+{% endif %}
+{% if deploy_nextcloud %}
+192.168.1.68 {{ nextcloud_host }}.{{ base_domain }}
+{% endif %}
+
+# DNS host - point to Traefik for HTTPS (pihole @ 192.168.1.92)
+192.168.1.68 {{ pihole_host }}.{{ base_domain }}

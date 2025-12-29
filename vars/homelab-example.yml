@@ -18,9 +18,14 @@ traefik_image: traefik:v3.6
 traefik_host: traefik
 
 # Pi-hole
+pihole_dir: /srv/docker/pihole
 pihole_host: pihole
 pihole_domain: "{{ pihole_host }}.{{ base_domain }}"
 pihole_ip: pihole.ip.address
+pihole_image: pihole/pihole:2025.11.1
+unbound_image: alpinelinux/unbound:latest  # Alpine only provides 'latest' tag, no version numbers
+pihole_dns1: 127.0.0.1#5335
+pihole_dns2: 127.0.0.1#5335
 
 # Portainer
 portainer_dir: /srv/docker/portainer
