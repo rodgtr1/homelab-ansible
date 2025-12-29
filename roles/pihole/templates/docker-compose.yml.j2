@@ -12,7 +12,7 @@ services:
       - FTLCONF_webserver_api_password={{ pihole_web_password }}
       - FTLCONF_webserver_domain={{ pihole_domain }}
       - FTLCONF_LOCAL_IPV4={{ pihole_ip }}
-      - PIHOLE_DNS_={{ pihole_dns1 }};{{ pihole_dns2 }}
+      - FTLCONF_dns_upstreams={{ pihole_dns1 }};{{ pihole_dns2 }}
 
     volumes:
       - {{ pihole_dir }}/etc-pihole:/etc/pihole
