@@ -31,7 +31,7 @@ pihole_dns2: 127.0.0.1#5335
 portainer_dir: /srv/docker/portainer
 portainer_host: portainer
 portainer_domain: "{{ portainer_host }}.{{ base_domain }}"
-portainer_image: portainer/portainer-ce:2.21.4
+portainer_image: portainer/portainer-ce:2.33.6
 
 # NextCloud
 nextcloud_dir: /srv/docker/nextcloud

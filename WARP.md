@@ -86,6 +86,13 @@ Secrets are stored in `vars/vault.yml` using Ansible Vault encryption. Required 
 
 **Generate Traefik auth**:
 ```bash
+# If htpasswd is installed
+htpasswd -nbB admin YourPassword
+
+# Or using Python (if bcrypt module is installed)
+python3 -c "import bcrypt; print('admin:' + bcrypt.hashpw(b'YourPassword', bcrypt.gensalt()).decode())"
+
+# Or using Docker
 docker run --rm httpd:alpine htpasswd -nbB admin YourPassword
 ```
 
@@ -147,7 +154,10 @@ Each role deploys services using `community.docker.docker_compose_v2` module. Al
 
 - Pi-hole v6 is deployed via Ansible with custom DNS records managed in `roles/pihole/templates/custom.list.j2`
 - Custom DNS records are deployed to `/etc/pihole/hosts/homelab.hosts` (Pi-hole v6 uses `hostsdir` directive)
-- Pi-hole web password uses `FTLCONF_webserver_api_password` environment variable (not `WEBPASSWORD`)
+- Pi-hole v6 uses `FTLCONF_*` environment variables (not the old v5 variables):
+  - `FTLCONF_webserver_api_password` for web authentication (not `WEBPASSWORD`)
+  - `FTLCONF_dns_upstreams` for upstream DNS servers (not `PIHOLE_DNS_`)
+  - Environment variables set via Docker Compose become read-only in Pi-hole's configuration
 - Portainer requires manual initial setup via docker-socket-proxy (see README.md)
 - Vaultwarden requires disabling signups after initial account creation
 - All changes should be tested with `--check --diff` before applying

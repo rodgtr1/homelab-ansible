@@ -2,6 +2,8 @@
 
 Minimal Ansible setup for managing a homelab with:
 
+> **Note**: This repo includes a `WARP.md` file that provides context for AI coding assistants (like Warp AI). It contains the same information as this README but in a format optimized for AI assistance.
+
 - Traefik (DNS-01, Cloudflare, HTTPS everywhere)
 - Docker
 - Firewall (UFW)
@@ -55,7 +57,9 @@ Pi-hole and Unbound run in Docker containers with Pi-hole handling ad-blocking a
    ```
 
 3. **Configure your domain and hosts:**
+   - Copy `vars/homelab.yml.example` to `vars/homelab.yml`
    - Edit `vars/homelab.yml` with your domain and IP addresses
+   - Copy `inventory/homelab.yml.example` to `inventory/homelab.yml` (if it exists) or create your own
    - Edit `inventory/homelab.yml` with your host details
 
 4. **Set up secrets (see Secrets section below)**
@@ -68,15 +72,32 @@ Secrets are stored in `vars/vault.yml` using Ansible Vault.
 
 ### 1. Get Cloudflare API Token
 
-Traefik needs a Cloudflare API token for DNS-01 challenge:
+This playbook assumes you have a real domain and want to keep your homelab off the public web (no public A records). This is achieved using a [DNS-01 challenge](https://letsencrypt.org/docs/challenge-types/), which adds a TXT record to your domain's DNS. Traefik uses this to generate and manage wildcard TLS certificates for all your apps.
+
+Traefik only needs a Cloudflare API token for DNS-01 challenge:
 
 1. Log into Cloudflare → My Profile → API Tokens
 2. Create Token using "Edit zone DNS" template
 3. Scope to your domain
 4. Copy the token
 
+Update your provider if not using Cloudflare. See the [Traefik documentation](https://doc.traefik.io/traefik/reference/install-configuration/tls/certificate-resolvers/acme/) for more information.
+
 ### 2. Generate Traefik Password
 
+Traefik requires a bcrypt hash (not plain text) for HTTP Basic Auth.
+
+**Option 1 - Using htpasswd (if installed):**
+```bash
+htpasswd -nbB admin YourPassword
+```
+
+**Option 2 - Using Python (available on most systems):**
+```bash
+python3 -c "import bcrypt; print('admin:' + bcrypt.hashpw(b'YourPassword', bcrypt.gensalt()).decode())"
+```
+
+**Option 3 - Using Docker (if htpasswd not available):**
 ```bash
 docker run --rm httpd:alpine htpasswd -nbB admin YourPassword
 ```
@@ -87,14 +108,7 @@ docker run --rm httpd:alpine htpasswd -nbB admin YourPassword
 ansible-vault create vars/vault.yml --ask-vault-pass
 ```
 
-See `vars/vault.yml.example` for the required format. Add the required secrets:
-```yaml
----
-cloudflare_dns_api_token: "your_token_here"
-traefik_dashboard_auth: "admin:$2y$05$..."  # From step 2
-pihole_web_password: "your_pihole_password"
-vaultwarden_admin_token: "your_vaultwarden_token"
-```
+See `vars/vault.yml.example` for the required format. Add the secrets found there.
 
 ### 4. Edit or View Existing Vault
 
@@ -134,18 +148,14 @@ Services can be enabled/disabled in `vars/homelab.yml`:
 
 - `deploy_traefik`: true
 - `deploy_portainer`: true
-- `deploy_nextcloud`: false (disabled by default)
-- `deploy_homepage`: true
-- `deploy_vaultwarden`: true
-- `deploy_pihole`: true
-- `deploy_firewall`: true
+- etc......
 
 ### Docker Image Versions
 
 Image versions are pinned in `vars/homelab.yml` for reproducibility:
 
 - Traefik: `traefik:v3.6`
-- Portainer: `portainer/portainer-ce:2.21.4`
+- Portainer: `portainer/portainer-ce:2.33.6`
 - Homepage: `ghcr.io/gethomepage/homepage:v1.8.0`
 - Nextcloud: `nextcloud/all-in-one:latest` (AIO recommends latest)
 - Vaultwarden: `vaultwarden/server:1.34.3`
@@ -227,11 +237,23 @@ After deploying Pi-hole for the first time:
 
 1. Access the web UI at http://192.168.1.92/admin or https://pihole.yourdomain.com
 2. Log in with the password from your vault file (`pihole_web_password`)
-3. Pi-hole v6 uses `FTLCONF_webserver_api_password` environment variable for authentication
-3. DNS queries flow: Client → Pi-hole (ad blocking) → Unbound (recursive DNS) → Root servers
-4. No third-party DNS dependencies (Cloudflare, Google, etc.)
+3. Pi-hole v6 uses `FTLCONF_webserver_api_password` for authentication and `FTLCONF_dns_upstreams` for upstream DNS configuration
+4. DNS queries flow: Client → Pi-hole (ad blocking) → Unbound (recursive DNS) → Root servers
+5. No third-party DNS dependencies (Cloudflare, Google, etc.)
 
-**Testing Unbound:**
+**Verifying Unbound Integration:**
+```bash
+# SSH to the pihole host
+ssh pi@192.168.1.92
+
+# Query a domain
+dig google.com @127.0.0.1
+
+# Watch live queries (should show forwarding to 127.0.0.1#5335)
+sudo docker exec pihole pihole -t
+```
+
+**Testing Unbound DNSSEC:**
 ```bash
 # SSH to the pihole host
 ssh pi@192.168.1.92
