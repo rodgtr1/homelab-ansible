@@ -52,10 +52,23 @@
             enablePools: true # optional, defaults to false
 
 - Info:
-
     - Calendar:
         widget:
             type: calendar
             firstDayInWeek: sunday
             view: monthly
             timezone: America/New_York
+            integrations:
+              - type: ical
+                url: {{ homepage_public_calendar_feed }}
+                name: My Events
+    - Agenda:
+        widget:
+            type: calendar
+            view: agenda
+            showTime: true # optional - show time for event happening today - defaults to false
+            previousDays: 3 # optional - shows events since three days ago - defaults to 0
+            integrations:
+              - type: ical
+                url: {{ homepage_public_calendar_feed }}
+                name: My Events

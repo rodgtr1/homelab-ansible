@@ -41,3 +41,6 @@ truenas_api_key: "your_truenas_api_key_here"
 # Vaultwarden admin token
 # Generate with: openssl rand -base64 48
 vaultwarden_admin_token: "your_vaultwarden_admin_token_here"
+
+# Homepage public calendar feed URL
+homepage_public_calendar_feed: "https://example.com/calendar.ics"
