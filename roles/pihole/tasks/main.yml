@@ -53,6 +53,23 @@
     mode: "0644"
   notify: reload pihole dns
 
+- name: Check if private DNS records exist
+  stat:
+    path: "{{ playbook_dir }}/../roles/pihole/templates/custom-private.list.j2"
+  delegate_to: localhost
+  become: false
+  register: private_dns_file
+
+- name: Deploy private DNS records
+  template:
+    src: custom-private.list.j2
+    dest: "{{ pihole_dir }}/etc-pihole/hosts/private.hosts"
+    owner: root
+    group: docker
+    mode: "0644"
+  when: private_dns_file.stat.exists
+  notify: reload pihole dns
+
 - name: Deploy Pi-hole compose file
   template:
     src: docker-compose.yml.j2

@@ -13,6 +13,11 @@ __pycache__/
 vars/homelab.yml
 
 # ----------------------------------
+# Private DNS records
+# ----------------------------------
+roles/pihole/templates/custom-private.list.j2
+
+# ----------------------------------
 # Secrets & vars (never commit)
 # ----------------------------------
 vault.yml
